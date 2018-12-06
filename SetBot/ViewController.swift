@@ -6,70 +6,61 @@
 //  Copyright © 2018 thoughtbot. All rights reserved.
 //
 
-import UIKit
-import SceneKit
 import ARKit
+import SceneKit
+import UIKit
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
+  @IBOutlet var sceneView: ARSCNView!
 
-    @IBOutlet var sceneView: ARSCNView!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Set the view's delegate
-        sceneView.delegate = self
-        
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
-        
-        // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
-        
-        // Set the scene to the view
-        sceneView.scene = scene
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
+  override func viewDidLoad() {
+    super.viewDidLoad()
 
-        // Run the view's session
-        sceneView.session.run(configuration)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        // Pause the view's session
-        sceneView.session.pause()
-    }
+    sceneView.delegate = self
+    sceneView.session.delegate = self
+    sceneView.showsStatistics = true
+  }
 
-    // MARK: - ARSCNViewDelegate
-    
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+
+    let configuration = ARImageTrackingConfiguration()
+
+    if let images = ARReferenceImage.referenceImages(inGroupNamed: "Set Cards", bundle: nil) {
+      configuration.trackingImages = images
+      sceneView.session.run(configuration)
+    } else {
+      fatalError("failed to load images")
     }
-*/
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
-    }
+  }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+
+    sceneView.session.pause()
+  }
+
+  func session(_ session: ARSession, didFailWithError error: Error) {
+    print(#function, error)
+  }
+
+  func sessionWasInterrupted(_ session: ARSession) {
+    print(#function)
+  }
+
+  func sessionInterruptionEnded(_ session: ARSession) {
+    print(#function)
+  }
+
+  func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+    print(#function, camera.trackingState)
+  }
+
+  func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+    print(#function, anchors)
+  }
+
+  func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+    print(#function, anchors)
+  }
 }
