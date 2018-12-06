@@ -12,6 +12,7 @@ import UIKit
 import Vision
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
+  @IBOutlet var cardImageView: UIImageView!
   @IBOutlet var overlayView: UIView!
   @IBOutlet var sceneView: ARSCNView!
 
@@ -77,7 +78,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
       }
       self.requestCompleted(request as! VNDetectRectanglesRequest)
     }
-    request.maximumObservations = 18
+    request.maximumObservations = 1
     return request
   }()
 
@@ -90,19 +91,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 
     let bounds = sceneView.bounds
     let orientation = UIApplication.shared.statusBarOrientation
+    let cameraResolution = currentFrame.camera.imageResolution
     let rotateAndCrop = currentFrame.displayTransform(for: orientation, viewportSize: bounds.size)
-    let scale = CGAffineTransform(scaleX: bounds.width, y: bounds.height)
+
+    let cameraScale = CGAffineTransform(scaleX: cameraResolution.width, y: cameraResolution.height)
+    let viewScale = CGAffineTransform(scaleX: bounds.width, y: bounds.height)
 
     overlayView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
 
+    let frameImage = CIImage(cvImageBuffer: currentFrame.capturedImage)
+
     for result in results {
+      let cardImage = frameImage.applyingFilter("CIPerspectiveCorrection", parameters: [
+        "inputBottomLeft": CIVector(cgPoint: result.bottomLeft.applying(cameraScale)),
+        "inputTopLeft": CIVector(cgPoint: result.topLeft.applying(cameraScale)),
+        "inputTopRight": CIVector(cgPoint: result.topRight.applying(cameraScale)),
+        "inputBottomRight": CIVector(cgPoint: result.bottomRight.applying(cameraScale)),
+      ])
+
+      cardImageView.image = UIImage(ciImage: cardImage)
+
       let path = UIBezierPath()
       path.move(to: result.bottomLeft.invertingYAxis.applying(rotateAndCrop))
       path.addLine(to: result.topLeft.invertingYAxis.applying(rotateAndCrop))
       path.addLine(to: result.topRight.invertingYAxis.applying(rotateAndCrop))
       path.addLine(to: result.bottomRight.invertingYAxis.applying(rotateAndCrop))
       path.close()
-      path.apply(scale)
+      path.apply(viewScale)
 
       let layer = CAShapeLayer()
       layer.fillColor = UIColor.green.cgColor

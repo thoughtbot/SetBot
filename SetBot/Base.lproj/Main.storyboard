@@ -24,6 +24,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WOD-m1-0yV">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X8a-Lh-vgd">
+                                <rect key="frame" x="67" y="459" width="300" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="2xx-cd-POC"/>
+                                    <constraint firstAttribute="width" constant="300" id="a5k-tO-GBb"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -32,6 +39,8 @@
                             <constraint firstItem="WOD-m1-0yV" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="UEj-q2-kEb"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
+                            <constraint firstItem="X8a-Lh-vgd" firstAttribute="trailing" secondItem="BrB-h1-WRS" secondAttribute="trailingMargin" id="fV8-UI-p0A"/>
+                            <constraint firstItem="X8a-Lh-vgd" firstAttribute="bottom" secondItem="BrB-h1-WRS" secondAttribute="bottomMargin" id="k8b-D0-Isb"/>
                             <constraint firstItem="WOD-m1-0yV" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="keh-Rz-KQ5"/>
                             <constraint firstItem="WOD-m1-0yV" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="pHq-Rc-Qha"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
@@ -39,6 +48,7 @@
                         <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
                     </view>
                     <connections>
+                        <outlet property="cardImageView" destination="X8a-Lh-vgd" id="zTt-JR-dNl"/>
                         <outlet property="overlayView" destination="WOD-m1-0yV" id="OQX-jT-XJg"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
                     </connections>
